@@ -76,8 +76,8 @@ class Sorting:
         elif self.AlgorithmName == "Selection Sort":
             DrawElements = Thread(target=self.DrawSelectionSort)
             DrawElements.start()
-        elif self.AlgorithmName == "Heap Sort":
-            DrawElements = Thread(target=self.DrawHeapSort)
+        elif self.AlgorithmName == "Merge Sort":
+            DrawElements = Thread(target=self.DrawMergeSort)
             DrawElements.start()
 
 
@@ -269,35 +269,36 @@ class Sorting:
             self.CurrentPosition+=1
 
         self.WaitForEndProcess=False
-
-    def merge(self,start,mid,end):
-        leftSubarray=self.array[start:mid-start+1]
-        rightSubarray=self.array[mid+1:end-mid]
-        i=0
-        j=0
-        k=start
-        while(i<len(leftSubarray) and j<len(rightSubarray)):
-            print('hello')
-            self.colours[start+i]=self.red
-            self.colours[mid+j]=self.green
+    '''
+    def mergeX(self,start,mid,end):
+        left_ind=start
+        right_ind=mid+1
+        cur=start
+        while(left_ind<=mid and right_ind<=end):
+            self.colors[left_ind]=self.green
+            self.colors[right_ind]=self.green
             self.draw()
             time.sleep(1/self.Speed)
-            if leftSubarray[i]<rightSubarray[j]:
-                self.colours[k]=self.white
-                self.draw()
-                self.array[k]=leftSubarray[i]
-                self.colours[k]=self.black
-                self.colours[k]=self.green
+            if(self.array[left_ind]<self.array[right_ind]):
+                self.colours[cur]=self.white
                 self.draw()
                 time.sleep(1/self.Speed)
-                self.colours[k]=self.white
+                left_ind+=1
+            else:
+                self.colors[left_ind]=self.red
+                self.colors[right_ind]=self.red
                 self.draw()
-                i+=1
-                k+=1
+                time.sleep(1/self.Speed)
+                self.array[left_ind],self.array[right_ind]=self.array[right_ind],self.array[left_ind]
+                self.colors[left_ind]=self.red
+                self.colors[right_ind]=self.red
+            cur+=1
+            
             else:
                 self.colours[k]=self.white
                 self.draw()
-                self.array[k]=rightSubarray[j]
+                self.array[k],self.array[j+mid]=rightSubarray[j],leftSubarray[i]
+                
                 self.colours[k]=self.black
                 self.colours[k]=self.red
                 self.draw()
@@ -306,6 +307,7 @@ class Sorting:
                 self.draw()
                 j+=1
                 k+=1
+        print(i,j,k)
         while(j<len(rightSubarray)):
             self.array[k]=rightSubarray[j]
             self.colours[k]=self.black
@@ -324,27 +326,115 @@ class Sorting:
             self.colours[k]=self.white
             k+=1
             i+=1
-    def DrawMergeSort(self):
+    def DrawMergeSortX(self):
         self.draw()
         print(self.array)
         NoOfElementsToBeMerged=2
         while(self.Sorting):
+            #print("*")
+            start=0
+            end=len(self.array)-1
+            mid=(start+end)//2
+            self.merge(start,mid,end)
+            print(self.array)
+            while(1):
+                start+=1
             while(NoOfElementsToBeMerged<len(self.array)):
                 if not self.Sorting:
                     break 
-                i=0
-                while(i+NoOfElementsToBeMerged-1<len(self.array)):
+                ind=0
+                print(NoOfElementsToBeMerged)
+                while(ind+NoOfElementsToBeMerged<len(self.array)):
+                    print(ind,NoOfElementsToBeMerged,len(self.array))
                     if not self.Sorting:
-                        break 
-                    start=i
-                    end=i+NoOfElementsToBeMerged-1
+                        break  
+                    start=ind
+                    end=ind+NoOfElementsToBeMerged-1
                     mid=(start+end)//2
                     self.merge(start,mid,end)
-                    i+=NoOfElementsToBeMerged
-
+                    ind+=NoOfElementsToBeMerged
+                
+                NoOfElementsToBeMerged+=1
             if len(self.array)%2==0:
                 self.merge(0,NoOfElementsToBeMerged//2,len(self.array)-1)
             print(self.array)
+            break
             if not self.Sorting:
                 break
+        self.WaitForEndProcess=False
+    '''
+    
+    def merge(self,L,M,R):
+        left_index=L
+        right_index=M+1
+        current=L
+        if(not self.Sorting):
+            return
+        while(left_index<right_index and right_index<=R):
+            if(not self.Sorting):
+                return
+            self.colours[left_index]=self.green
+            self.colours[right_index]=self.green
+            self.draw()
+            time.sleep(1/self.Speed)
+            #print("*",*self.array)
+            if(self.array[left_index]<self.array[right_index]):
+                if(not self.Sorting):
+                    return
+                self.colours[left_index]=self.white
+                self.colours[right_index]=self.white
+                self.draw()
+                left_index+=1
+            else:
+                temp=right_index
+                self.colours[left_index]=self.red
+                self.colours[right_index]=self.red
+                self.draw()
+                time.sleep(1/self.Speed)
+                self.colours[left_index]=self.black
+                self.colours[right_index]=self.black
+                self.draw()
+                while(temp!=left_index):
+                    if(not self.Sorting):
+                        return
+                    self.colours[temp]=self.black
+                    self.colours[temp-1]=self.black
+                    self.draw()
+                    self.array[temp],self.array[temp-1]=self.array[temp-1],self.array[temp]
+                    self.colours[temp]=self.white
+                    self.colours[temp-1]=self.white
+                    self.draw()
+                    temp-=1
+                self.colours[left_index]=self.red
+                self.colours[right_index]=self.red
+                self.draw()
+                time.sleep(1/self.Speed)
+                self.colours[left_index]=self.white
+                self.colours[right_index]=self.white
+                self.draw()
+                left_index+=1
+                right_index+=1
+            if(not self.Sorting):
+                return
+        
+
+                
+    def MergeSort(self,left_ind,right_ind):
+        if( not self.Sorting):
+            return 
+        if(right_ind!=left_ind):
+            mid=(left_ind+right_ind)//2
+            self.MergeSort(left_ind,mid)
+            if(not self.Sorting):
+                return
+            self.MergeSort(mid+1,right_ind)
+            if(not self.Sorting):
+                return
+            self.merge(left_ind,mid,right_ind)
+            
+        
+    def DrawMergeSort(self):
+        self.draw()
+        self.MergeSort(0,len(self.array)-1)
+        self.draw()
         self.WaitForEndProcess=False
