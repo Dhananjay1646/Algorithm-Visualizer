@@ -107,7 +107,8 @@ class Sudoku():
             else:
                 bgcolor=self.WHITE
         try:
-            self.win.blit(self.font.render(number, True,color,bgcolor),(self.text_Pading_x+x_shift+x*self.block,self.text_Pading_y+y_shift+y*self.block))
+            pygame.draw.rect(self.win,bgcolor,(4+x_shift+x*self.block,4+y_shift+y*self.block,self.block-6,self.block-6))
+            self.win.blit(self.font.render(number, True,color),(self.text_Pading_x+x_shift+x*self.block,self.text_Pading_y+y_shift+y*self.block))
         except:
             pass
     def initial_state(self,NoOfElements):
